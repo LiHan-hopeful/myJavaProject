@@ -1,0 +1,155 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="lihan.mapper.RecordMapper">
+  <resultMap id="BaseResultMap" type="lihan.model.Record">
+    <id column="id" jdbcType="INTEGER" property="id" />
+    <result column="member_id" jdbcType="INTEGER" property="memberId" />
+    <result column="award_id" jdbcType="INTEGER" property="awardId" />
+    <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    id, member_id, award_id, create_time
+  </sql>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from record
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+    delete from record
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="lihan.model.Record">
+    <selectKey keyProperty="id" order="AFTER" resultType="java.lang.Integer">
+      SELECT LAST_INSERT_ID()
+    </selectKey>
+    insert into record (member_id, award_id, create_time
+      )
+    values (#{memberId,jdbcType=INTEGER}, #{awardId,jdbcType=INTEGER}, #{createTime,jdbcType=TIMESTAMP}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="lihan.model.Record">
+    <selectKey keyProperty="id" order="AFTER" resultType="java.lang.Integer">
+      SELECT LAST_INSERT_ID()
+    </selectKey>
+    insert into record
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="memberId != null">
+        member_id,
+      </if>
+      <if test="awardId != null">
+        award_id,
+      </if>
+      <if test="createTime != null">
+        create_time,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="memberId != null">
+        #{memberId,jdbcType=INTEGER},
+      </if>
+      <if test="awardId != null">
+        #{awardId,jdbcType=INTEGER},
+      </if>
+      <if test="createTime != null">
+        #{createTime,jdbcType=TIMESTAMP},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="lihan.model.Record">
+    update record
+    <set>
+      <if test="memberId != null">
+        member_id = #{memberId,jdbcType=INTEGER},
+      </if>
+      <if test="awardId != null">
+        award_id = #{awardId,jdbcType=INTEGER},
+      </if>
+      <if test="createTime != null">
+        create_time = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="lihan.model.Record">
+    update record
+    set member_id = #{memberId,jdbcType=INTEGER},
+      award_id = #{awardId,jdbcType=INTEGER},
+      create_time = #{createTime,jdbcType=TIMESTAMP}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <select id="selectOne" parameterType="lihan.model.Record" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from record
+    <trim prefix="where" prefixOverrides="and">
+      <if test="memberId != null">
+        and member_id = #{memberId,jdbcType=INTEGER}
+      </if>
+      <if test="awardId != null">
+        and award_id = #{awardId,jdbcType=INTEGER}
+      </if>
+      <if test="createTime != null">
+        and create_time = #{createTime,jdbcType=TIMESTAMP}
+      </if>
+    </trim>
+  </select>
+  <select id="selectAll" resultMap="BaseResultMap">
+    select id, member_id, award_id, create_time
+    from record
+  </select>
+  <select id="selectByCondition" parameterType="lihan.model.Record" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from record
+    <trim prefix="where" prefixOverrides="and">
+      <if test="memberId != null">
+        and member_id = #{memberId,jdbcType=INTEGER}
+      </if>
+      <if test="awardId != null">
+        and award_id = #{awardId,jdbcType=INTEGER}
+      </if>
+      <if test="createTime != null">
+        and create_time = #{createTime,jdbcType=TIMESTAMP}
+      </if>
+    </trim>
+  </select>
+  <delete id="deleteByIds" parameterType="java.util.List">
+    delete from record
+      where id in
+    <foreach close=")" collection="list" item="item" open="(" separator=",">
+      #{item}
+    </foreach>
+  </delete>
+
+
+
+  <insert id="batchAdd">
+    insert into record(member_id, award_id)
+        values
+    <foreach collection="memberIds" item="item" separator=",">
+      (#{item},#{awardId})
+    </foreach>
+  </insert>
+  <delete id="deleteByCondition" parameterType="lihan.model.Record">
+    delete from record
+    <trim prefix="where" prefixOverrides="and">
+      <if test="memberId != null">
+        and member_id = #{memberId,jdbcType=INTEGER}
+      </if>
+      <if test="awardId != null">
+        and award_id = #{awardId,jdbcType=INTEGER}
+      </if>
+    </trim>
+  </delete>
+  <delete id="deleteBySettingId" parameterType="java.lang.Integer">
+    delete r
+      from record r,
+           award a,
+           setting s
+      where a.setting_id = s.id
+        and r.award_id = a.id
+        and s.id = #{id}
+  </delete>
+</mapper>

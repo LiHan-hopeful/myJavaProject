@@ -1,0 +1,180 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="lihan.mapper.AwardMapper">
+  <resultMap id="BaseResultMap" type="lihan.model.Award">
+    <id column="id" jdbcType="INTEGER" property="id" />
+    <result column="name" jdbcType="VARCHAR" property="name" />
+    <result column="count" jdbcType="INTEGER" property="count" />
+    <result column="award" jdbcType="VARCHAR" property="award" />
+    <result column="setting_id" jdbcType="INTEGER" property="settingId" />
+    <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
+    <collection property="luckyMemberIds"
+                ofType="java.lang.Integer"
+                javaType="java.util.ArrayList"
+                >
+      <result column="pre_r_member_id" />
+    </collection>
+  </resultMap>
+  <sql id="Base_Column_List">
+    id, name, count, award, setting_id, create_time
+  </sql>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from award
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+    delete from award
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="lihan.model.Award">
+    <selectKey keyProperty="id" order="AFTER" resultType="java.lang.Integer">
+      SELECT LAST_INSERT_ID()
+    </selectKey>
+    insert into award (name, count, award, 
+      setting_id, create_time)
+    values (#{name,jdbcType=VARCHAR}, #{count,jdbcType=INTEGER}, #{award,jdbcType=VARCHAR}, 
+      #{settingId,jdbcType=INTEGER}, #{createTime,jdbcType=TIMESTAMP})
+  </insert>
+  <insert id="insertSelective" parameterType="lihan.model.Award">
+    <selectKey keyProperty="id" order="AFTER" resultType="java.lang.Integer">
+      SELECT LAST_INSERT_ID()
+    </selectKey>
+    insert into award
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="name != null">
+        name,
+      </if>
+      <if test="count != null">
+        count,
+      </if>
+      <if test="award != null">
+        award,
+      </if>
+      <if test="settingId != null">
+        setting_id,
+      </if>
+      <if test="createTime != null">
+        create_time,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="name != null">
+        #{name,jdbcType=VARCHAR},
+      </if>
+      <if test="count != null">
+        #{count,jdbcType=INTEGER},
+      </if>
+      <if test="award != null">
+        #{award,jdbcType=VARCHAR},
+      </if>
+      <if test="settingId != null">
+        #{settingId,jdbcType=INTEGER},
+      </if>
+      <if test="createTime != null">
+        #{createTime,jdbcType=TIMESTAMP},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="lihan.model.Award">
+    update award
+    <set>
+      <if test="name != null">
+        name = #{name,jdbcType=VARCHAR},
+      </if>
+      <if test="count != null">
+        count = #{count,jdbcType=INTEGER},
+      </if>
+      <if test="award != null">
+        award = #{award,jdbcType=VARCHAR},
+      </if>
+      <if test="settingId != null">
+        setting_id = #{settingId,jdbcType=INTEGER},
+      </if>
+      <if test="createTime != null">
+        create_time = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="lihan.model.Award">
+    update award
+    set name = #{name,jdbcType=VARCHAR},
+      count = #{count,jdbcType=INTEGER},
+      award = #{award,jdbcType=VARCHAR},
+      setting_id = #{settingId,jdbcType=INTEGER},
+      create_time = #{createTime,jdbcType=TIMESTAMP}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <select id="selectOne" parameterType="lihan.model.Award" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from award
+    <trim prefix="where" prefixOverrides="and">
+      <if test="name != null">
+        and name = #{name,jdbcType=VARCHAR}
+      </if>
+      <if test="count != null">
+        and count = #{count,jdbcType=INTEGER}
+      </if>
+      <if test="award != null">
+        and award = #{award,jdbcType=VARCHAR}
+      </if>
+      <if test="settingId != null">
+        and setting_id = #{settingId,jdbcType=INTEGER}
+      </if>
+      <if test="createTime != null">
+        and create_time = #{createTime,jdbcType=TIMESTAMP}
+      </if>
+    </trim>
+  </select>
+  <select id="selectAll" resultMap="BaseResultMap">
+    select id, name, count, award, setting_id, create_time
+    from award
+  </select>
+  <select id="selectByCondition" parameterType="lihan.model.Award" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from award
+    <trim prefix="where" prefixOverrides="and">
+      <if test="name != null">
+        and name = #{name,jdbcType=VARCHAR}
+      </if>
+      <if test="count != null">
+        and count = #{count,jdbcType=INTEGER}
+      </if>
+      <if test="award != null">
+        and award = #{award,jdbcType=VARCHAR}
+      </if>
+      <if test="settingId != null">
+        and setting_id = #{settingId,jdbcType=INTEGER}
+      </if>
+      <if test="createTime != null">
+        and create_time = #{createTime,jdbcType=TIMESTAMP}
+      </if>
+    </trim>
+  </select>
+  <delete id="deleteByIds" parameterType="java.util.List">
+    delete from award
+      where id in
+    <foreach close=")" collection="list" item="item" open="(" separator=",">
+      #{item}
+    </foreach>
+  </delete>
+
+
+  <select id="query" parameterType="lihan.model.Award" resultMap="BaseResultMap">
+    select a.id,
+           a.name,
+           a.count,
+           a.award,
+           a.setting_id,
+           a.create_time,
+           r.id        pre_r_id,
+           r.member_id pre_r_member_id
+    from award a
+             left join record r on a.id = r.award_id
+    where a.setting_id = #{settingId}
+  </select>
+</mapper>

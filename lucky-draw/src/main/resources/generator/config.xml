@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE generatorConfiguration
+        PUBLIC "-//mybatis.org//DTD MyBatis Generator Configuration 1.0//EN"
+        "http://mybatis.org/dtd/mybatis-generator-config_1_0.dtd">
+
+<generatorConfiguration>
+    <properties resource="application.properties" />
+
+    <context id="Mysql" targetRuntime="MyBatis3" defaultModelType="flat">
+
+        <property name="javaFileEncoding" value="UTF-8"/>
+        <!--配置是否使用通用 Mapper 自带的注释扩展，默认 true-->
+<!--         <property name="useMapperCommentGenerator" value="false"/>-->
+        <plugin type="tool.DefaultGeneratorPlugin">
+            <property name="rootMappers" value="lihan.base.BaseMapper" />
+            <property name="lombok" value="Getter,Setter,ToString"/>
+        </plugin>
+
+        <commentGenerator type="tool.DefaultCommentGenerator" />
+
+        <jdbcConnection driverClass="${spring.datasource.driver-class-name}"
+                        connectionURL="${spring.datasource.url}"
+                        userId="${spring.datasource.username}"
+                        password="${spring.datasource.password}">
+            <property name="useInformationSchema" value="true" />
+        </jdbcConnection>
+
+        <!-- 默认false，把JDBC DECIMAL 和 NUMERIC 类型解析为 Integer，
+                为 true时把JDBC DECIMAL 和 NUMERIC 类型解析为java.math.BigDecimal -->
+        <javaTypeResolver>
+            <property name="forceBigDecimals" value="false" />
+        </javaTypeResolver>
+
+        <!--MyBatis 生成器只需要生成 Model-->
+        <javaModelGenerator targetProject="src/test/java"
+                            targetPackage="lihan.model">
+            <property name="rootClass" value="lihan.base.BaseEntity"/>
+        </javaModelGenerator>
+
+        <!--mybatis 的xml文件地址-->
+        <sqlMapGenerator targetProject="src/test/resources"
+                         targetPackage="mapper">
+            <property name="enableSubPackages" value="true"/>
+        </sqlMapGenerator>
+
+        <!--mybatis的mapper接口-->
+        <javaClientGenerator type="XMLMAPPER"
+                             targetProject="src/test/java"
+                             targetPackage="lihan.mapper">
+            <property name="enableSubPackages" value="true"/>
+        </javaClientGenerator>
+
+        <!-- 需要生成的表，%表示模糊匹配，也可以指定具体的表名 -->
+        <table tableName="%"
+               enableCountByExample="false"
+               enableDeleteByExample="false"
+               enableSelectByExample="false"
+               enableUpdateByExample="false"
+        >
+            <!-- insert方法通过自增主键插入数据后，主键值是否设置到对象属性中 -->
+            <!--            <generatedKey column="id" sqlStatement="JDBC"/>-->
+            <generatedKey column="id" sqlStatement="Mysql" identity="true" />
+        </table>
+        <!--        <table tableName="user">-->
+        <!--            <generatedKey column="id" sqlStatement="Mysql" identity="true" />-->
+        <!--        </table>-->
+    </context>
+</generatorConfiguration>

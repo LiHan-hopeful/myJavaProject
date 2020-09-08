@@ -1,0 +1,142 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="lihan.mapper.MemberMapper">
+  <resultMap id="BaseResultMap" type="lihan.model.Member">
+    <id column="id" jdbcType="INTEGER" property="id" />
+    <result column="name" jdbcType="VARCHAR" property="name" />
+    <result column="no" jdbcType="VARCHAR" property="no" />
+    <result column="user_id" jdbcType="INTEGER" property="userId" />
+    <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    id, name, no, user_id, create_time
+  </sql>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from member
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+    delete from member
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="lihan.model.Member">
+    <selectKey keyProperty="id" order="AFTER" resultType="java.lang.Integer">
+      SELECT LAST_INSERT_ID()
+    </selectKey>
+    insert into member (name, no, user_id, 
+      create_time)
+    values (#{name,jdbcType=VARCHAR}, #{no,jdbcType=VARCHAR}, #{userId,jdbcType=INTEGER}, 
+      #{createTime,jdbcType=TIMESTAMP})
+  </insert>
+  <insert id="insertSelective" parameterType="lihan.model.Member">
+    <selectKey keyProperty="id" order="AFTER" resultType="java.lang.Integer">
+      SELECT LAST_INSERT_ID()
+    </selectKey>
+    insert into member
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="name != null">
+        name,
+      </if>
+      <if test="no != null">
+        no,
+      </if>
+      <if test="userId != null">
+        user_id,
+      </if>
+      <if test="createTime != null">
+        create_time,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="name != null">
+        #{name,jdbcType=VARCHAR},
+      </if>
+      <if test="no != null">
+        #{no,jdbcType=VARCHAR},
+      </if>
+      <if test="userId != null">
+        #{userId,jdbcType=INTEGER},
+      </if>
+      <if test="createTime != null">
+        #{createTime,jdbcType=TIMESTAMP},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="lihan.model.Member">
+    update member
+    <set>
+      <if test="name != null">
+        name = #{name,jdbcType=VARCHAR},
+      </if>
+      <if test="no != null">
+        no = #{no,jdbcType=VARCHAR},
+      </if>
+      <if test="userId != null">
+        user_id = #{userId,jdbcType=INTEGER},
+      </if>
+      <if test="createTime != null">
+        create_time = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="lihan.model.Member">
+    update member
+    set name = #{name,jdbcType=VARCHAR},
+      no = #{no,jdbcType=VARCHAR},
+      user_id = #{userId,jdbcType=INTEGER},
+      create_time = #{createTime,jdbcType=TIMESTAMP}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <select id="selectOne" parameterType="lihan.model.Member" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from member
+    <trim prefix="where" prefixOverrides="and">
+      <if test="name != null">
+        and name = #{name,jdbcType=VARCHAR}
+      </if>
+      <if test="no != null">
+        and no = #{no,jdbcType=VARCHAR}
+      </if>
+      <if test="userId != null">
+        and user_id = #{userId,jdbcType=INTEGER}
+      </if>
+      <if test="createTime != null">
+        and create_time = #{createTime,jdbcType=TIMESTAMP}
+      </if>
+    </trim>
+  </select>
+  <select id="selectAll" resultMap="BaseResultMap">
+    select id, name, no, user_id, create_time
+    from member
+  </select>
+  <select id="selectByCondition" parameterType="lihan.model.Member" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from member
+    <trim prefix="where" prefixOverrides="and">
+      <if test="name != null">
+        and name = #{name,jdbcType=VARCHAR}
+      </if>
+      <if test="no != null">
+        and no = #{no,jdbcType=VARCHAR}
+      </if>
+      <if test="userId != null">
+        and user_id = #{userId,jdbcType=INTEGER}
+      </if>
+      <if test="createTime != null">
+        and create_time = #{createTime,jdbcType=TIMESTAMP}
+      </if>
+    </trim>
+  </select>
+  <delete id="deleteByIds" parameterType="java.util.List">
+    delete from member
+      where id in
+    <foreach close=")" collection="list" item="item" open="(" separator=",">
+      #{item}
+    </foreach>
+  </delete>
+</mapper>
